@@ -24,7 +24,7 @@ class _MainAppState extends State<MainApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        theme: ThemeData(fontFamily: 'Poppins'),
+        theme: ThemeData(fontFamily: 'Poppins', brightness: Brightness.dark),
         home: DefaultTabController(
           length: 2,
           child: Scaffold(
