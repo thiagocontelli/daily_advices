@@ -9,6 +9,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  http: ^1.2.0
 
 dev_dependencies:
   flutter_test:
@@ -29,5 +30,7 @@ flutter:
           weight: 600
         - asset: fonts/Poppins-Bold.ttf
           weight: 700
+        - asset: fonts/Poppins-Italic.ttf
+          style: italic
         
 
