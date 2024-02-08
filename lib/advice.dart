@@ -68,37 +68,40 @@ class _AdviceScreenState extends State<AdviceScreen> {
         direction: Axis.vertical,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Wrap(
-            runSpacing: 32,
-            children: [
-              const Center(
-                child: Text('This is your daily advice:'),
-              ),
-              FutureBuilder<Advice>(
-                future: futureAdvice,
-                builder: (context, snapshot) {
-                  if (snapshot.hasData) {
-                    return Center(
-                        child: Text(
-                      '"${snapshot.data!.slip.advice}"',
-                      style: const TextStyle(
-                          fontSize: 24, fontStyle: FontStyle.italic),
-                      textAlign: TextAlign.center,
-                    ));
-                  } else if (snapshot.hasError) {
-                    return Center(child: Text('${snapshot.error}'));
-                  }
+          Padding(
+            padding: const EdgeInsets.all(16),
+            child: Wrap(
+              runSpacing: 32,
+              children: [
+                const Center(
+                  child: Text('This is your daily advice:'),
+                ),
+                FutureBuilder<Advice>(
+                  future: futureAdvice,
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData) {
+                      return Center(
+                          child: Text(
+                        '"${snapshot.data!.slip.advice}"',
+                        style: const TextStyle(
+                            fontSize: 24, fontStyle: FontStyle.italic),
+                        textAlign: TextAlign.center,
+                      ));
+                    } else if (snapshot.hasError) {
+                      return Center(child: Text('${snapshot.error}'));
+                    }
 
-                  return const Center(
-                    child: Text('Loading...'),
-                  );
-                },
-              ),
-              const Center(
-                child: Text('Come back tomorrow for more advices!'),
-              )
-            ],
-          )
+                    return const Center(
+                      child: Text('Loading...'),
+                    );
+                  },
+                ),
+                const Center(
+                  child: Text('Come back tomorrow for more advices!'),
+                )
+              ],
+            ),
+          ),
         ],
       ),
     );
