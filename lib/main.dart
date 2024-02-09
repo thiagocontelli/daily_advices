@@ -1,4 +1,5 @@
 import 'package:daily_advices/advice.dart';
+import 'package:daily_advices/history.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -14,12 +15,7 @@ class MainApp extends StatefulWidget {
 
 class _MainAppState extends State<MainApp> {
   int index = 0;
-  final List<Widget> screens = [
-    const AdviceScreen(),
-    const Center(
-      child: Text('Work in progress...'),
-    )
-  ];
+  final List<Widget> screens = [const AdviceScreen(), const HistoryScreen()];
 
   @override
   Widget build(BuildContext context) {

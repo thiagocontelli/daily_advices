@@ -41,6 +41,21 @@ class DatabaseService {
     return null;
   }
 
+  static Future<List<AdviceEntity>> getAdvices() async {
+    final Database db = await _getDB();
+
+    List<Map> maps = await db.query(_advicesTable);
+
+    List<AdviceEntity> advices = maps.map((map) {
+      return AdviceEntity(
+          id: map[_idColumn],
+          advice: map[_adviceColumn],
+          createdAt: DateTime.parse(map[_createdAtColumn]));
+    }).toList();
+
+    return advices;
+  }
+
   static insertAdvice(Map<String, dynamic> adviceMap) async {
     final Database db = await _getDB();
 
