@@ -37,7 +37,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
           AdviceEntity advice = advices[index];
 
           String createdAt =
-              '- ${DateFormat('EEEE, MMM d, yyyy').format(DateTime.now())}';
+              '- ${DateFormat('EEEE, MMM d, yyyy').format(advice.createdAt)}';
 
           return ListTile(
             title: Card(
