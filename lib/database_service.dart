@@ -15,7 +15,7 @@ class DatabaseService {
     return openDatabase(join(await getDatabasesPath(), _dbFileName),
         onCreate: (db, version) async {
       return await db.execute(
-          'CREATE TABLE $_advicesTable($_idColumn INTEGER PRIMARY KEY, $_adviceColumn TEXT NOT NULL, $_createdAtColumn TEXT NOT NULL)');
+          'CREATE TABLE $_advicesTable($_idColumn INTEGER PRIMARY KEY AUTOINCREMENT, $_adviceColumn TEXT NOT NULL, $_createdAtColumn TEXT NOT NULL)');
     }, version: _version);
   }
 
@@ -59,6 +59,9 @@ class DatabaseService {
   static insertAdvice(Map<String, dynamic> adviceMap) async {
     final Database db = await _getDB();
 
-    await db.insert(_advicesTable, adviceMap);
+    await db.insert(_advicesTable, {
+      _advicesTable: adviceMap['advice'],
+      _createdAtColumn: adviceMap['created_at']
+    });
   }
 }
