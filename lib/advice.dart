@@ -1,14 +1,27 @@
+import 'dart:async';
 import 'dart:convert';
 
+import 'package:daily_advices/database_service.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:intl/intl.dart';
 
 Future<Advice> fetchAdvice() async {
   final response =
       await http.get(Uri.parse('https://api.adviceslip.com/advice'));
 
   if (response.statusCode == 200) {
-    return Advice.fromJson(jsonDecode(response.body) as Map<String, dynamic>);
+    var advice =
+        Advice.fromJson(jsonDecode(response.body) as Map<String, dynamic>);
+
+    var adviceEntity = AdviceEntity(
+        id: advice.slip.id,
+        advice: advice.slip.advice,
+        createdAt: DateTime.now());
+
+    await DatabaseService.insertAdvice(adviceEntity.toMap());
+
+    return advice;
   } else {
     throw Exception('Failed.');
   }
@@ -45,6 +58,23 @@ class Advice {
   }
 }
 
+class AdviceEntity {
+  int id;
+  String advice;
+  DateTime createdAt;
+
+  AdviceEntity(
+      {required this.id, required this.advice, required this.createdAt});
+
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'advice': advice,
+      'created_at': DateFormat('yyyy-MM-dd').format(DateTime.now())
+    };
+  }
+}
+
 class AdviceScreen extends StatefulWidget {
   const AdviceScreen({super.key});
 
@@ -53,12 +83,29 @@ class AdviceScreen extends StatefulWidget {
 }
 
 class _AdviceScreenState extends State<AdviceScreen> {
-  late Future<Advice> futureAdvice;
+  Advice? advice;
 
   @override
-  void initState() {
+  initState() {
     super.initState();
-    futureAdvice = fetchAdvice();
+    onInit();
+  }
+
+  onInit() async {
+    final AdviceEntity? adviceEntity = await DatabaseService.getTodaysAdvice();
+
+    if (adviceEntity == null) {
+      Advice newAdvice = await fetchAdvice();
+      setState(() {
+        advice = newAdvice;
+      });
+      return;
+    }
+
+    setState(() {
+      advice =
+          Advice(slip: Slip(advice: adviceEntity.advice, id: adviceEntity.id));
+    });
   }
 
   @override
@@ -69,32 +116,34 @@ class _AdviceScreenState extends State<AdviceScreen> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Padding(
-            padding: const EdgeInsets.all(16),
+            padding: const EdgeInsets.all(24),
             child: Wrap(
               runSpacing: 32,
               children: [
                 const Center(
                   child: Text('This is your daily advice:'),
                 ),
-                FutureBuilder<Advice>(
-                  future: futureAdvice,
-                  builder: (context, snapshot) {
-                    if (snapshot.hasData) {
-                      return Center(
-                          child: Text(
-                        '"${snapshot.data!.slip.advice}"',
-                        style: const TextStyle(
-                            fontSize: 24, fontStyle: FontStyle.italic),
-                        textAlign: TextAlign.center,
-                      ));
-                    } else if (snapshot.hasError) {
-                      return Center(child: Text('${snapshot.error}'));
-                    }
-
-                    return const Center(
-                      child: Text('Loading...'),
-                    );
-                  },
+                Column(
+                  children: [
+                    Center(
+                        child: Text(
+                      '"${advice?.slip.advice}"',
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(
+                          fontSize: 24, fontStyle: FontStyle.italic),
+                    )),
+                    const SizedBox(
+                      height: 16,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        Text(
+                          '- ${DateFormat('EEEE, MMM d, yyyy').format(DateTime.now())}',
+                        ),
+                      ],
+                    ),
+                  ],
                 ),
                 const Center(
                   child: Text('Come back tomorrow for more advices!'),
