@@ -60,7 +60,7 @@ class DatabaseService {
     final Database db = await _getDB();
 
     await db.insert(_advicesTable, {
-      _advicesTable: adviceMap['advice'],
+      _adviceColumn: adviceMap['advice'],
       _createdAtColumn: adviceMap['created_at']
     });
   }
