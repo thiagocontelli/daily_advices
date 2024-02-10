@@ -29,41 +29,38 @@ class _HistoryScreenState extends State<HistoryScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Advice history')),
-      body: ListView.builder(
-        itemCount: advices.length,
-        itemBuilder: (context, index) {
-          AdviceEntity advice = advices[index];
+    return ListView.builder(
+      itemCount: advices.length,
+      itemBuilder: (context, index) {
+        AdviceEntity advice = advices[index];
 
-          String createdAt =
-              '- ${DateFormat('EEEE, MMM d, yyyy').format(advice.createdAt)}';
+        String createdAt =
+            '- ${DateFormat('EEEE, MMM d, yyyy').format(advice.createdAt)}';
 
-          return ListTile(
-            title: Card(
-                child: Padding(
-              padding: const EdgeInsets.all(16),
-              child: Column(
-                children: [
-                  Text(
-                    '"${advice.advice}"',
-                    style: const TextStyle(fontStyle: FontStyle.italic),
-                  ),
-                  const SizedBox(height: 16),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      Text(
-                        createdAt,
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            )),
-          );
-        },
-      ),
+        return ListTile(
+          title: Card(
+              child: Padding(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              children: [
+                Text(
+                  '"${advice.advice}"',
+                  style: const TextStyle(fontStyle: FontStyle.italic),
+                ),
+                const SizedBox(height: 16),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Text(
+                      createdAt,
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          )),
+        );
+      },
     );
   }
 }
