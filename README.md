@@ -42,4 +42,4 @@ Follow these steps to get the Daily Advice App up and running on your local envi
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+This project is licensed under the MIT License.
